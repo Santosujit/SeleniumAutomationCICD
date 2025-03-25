@@ -1,0 +1,284 @@
+In Our Framework, We have used POM (Page Object Model), for each page a separate java class, and we used PageFactory to create web elements.
+Log in class giving rise to productpage object
+so inside log in class, we create the object of productpage and rerturn it.
+
+In Our Framework, we have two types utility. One for selenium methods or page methods,all the common methods are 
+put inside Abstract Components, all the page classes inheriting this Abstract class,and we have used another utility
+in test level, named Base Test, where all common test methods like launching a URL, closing the browser, initializing the driver code
+are put into Base Test, and all test calses inheriting the BaseTest.
+
+We are using OOPs concepts like Inheritance, Interface, Polymorphism, Overriding in our Framework.
+
+We are dricing the data from External JSon file, we used TestNG DataProvider for it. We used Jackson Databind API to 
+read the JSon, and converts into HashMap, and This hasmap is passed into the DataProvider
+which passed the values to the test cases. THis way we achieved parameterization.
+
+Yes we used Interfaces in our Framework. In Listeners class, we are using ITestListener interface. This interface provides methods
+usuful methods like OnFailure(), OnStart() method. so we bypassed writing it in each test case.
+Also WebDriver Interface, chromeDriver is a class which implements WebDriver to run on chrome driver.
+We used WebDriver and TestNG interfaces.
+
+Encapsulation - we also used in our framework. Encapsulation means hiding the details of the class to other class.
+WE only make Action methods public, but make the WebElements of fields as private, so other classes can't access them.
+
+In Our Framework,we did parallell execution too. We had a XML, where we mentioned parallel="test"
+And in that XML, two tests were there, and two classes. So while execution, one test case from each class ran parallelly 1st.
+It was smooth. However we encountered issues while generating a consolidated report using Listeners.
+So in Listeneres class, we use THread<Local> concept, which assigns uniue thread id to each test case, 
+we used getter and setter, set the thread id to the tst case, and get the thres id.
+
+In Our Framework, we used parallel, so we never made driver as static, as many threads will usethe same driver.
+wherever there is a only reading involved, like reading from Global Property file etc, we can make them static, but 
+driver no static pls.
+
+we are reading Global property, using Properties file using getProperty() method.
+Globally declare browser, URL in prperties file. (Many URLs like QA, UAT URLs), timeOuts we can drive from properties file too.
+we can also drive the global property from maven command. To catch the maven variable in the code we used 
+System.getProperty("browser");
+
+Suppose you have 100 test cases, and you want run only 25 test cases as smoke test.
+So we can do that, 1st we will mark on those 25 identified smoke test cases as groups tag, then
+Create a smoketest XML, and add Groups tag, and include the name group="smoke", then
+Go to POM.xml, and create a new profile using this smoke test NG xml, and run it with maven command using the profile ID.
+
+How you handle Flaky Test Cases. Flaky Test Cases are those which fails on 1st attempt randomly, but works on the 2nd attempt.
+In Our Framework, for flaky test cases, we used IRetryAnalyzer interface, and there is a method inside it, customised for no of times
+retry. so whenever any test case fails, it will execute again. And also If some test case we identified as flaky before execution
+like LogInTest, we can add TestNG helper attribute on Login Test case too, so If iot fails, it will be rerun.
+
+In Our Framework, we have created the ability of automatic screen shot capture when test fails.
+On Listener Class, we implemented ITestListener, which gives a method OnTestFailure(), inside this method we wrote the screen shot taking code.
+
+Below is the explanation of entire Framework-
+
+JenKins job is run -> maven command gets executed internally -> It goes to POM.xml -> Inside POM, testNG.xml is reached ->
+Goes to Test Cases -> Test Case needs locatiors and Action methods so goes to Page Classes -> Page class needs reusable components
+so page class goes to Abstract components class -> Test case goes to BaseTest for Test related methods like opening closing browser, 
+initializing driver which is used in each and every test case -> Test case needs data so they go to JSon file -> 
+JSon parser is in BasTest so goes there -> Parsed HashMap comes to DataProvider present in each and every Test case
+
+
+ while execution going on It reports to Listeneres 
+-> Listeners report to Extent Report 
+
+
+
+
+Log in Page or Landing Page -> Product Page -> CheckOut Page -> Confirmation Page
+Create diff java class for diff pages
+In Action methods only have By locators, WebElements, and Action methods like public void Login() etc
+In Test method, driver is there, main() method is there
+Create one utility or Abstract class for utilities
+Every Page class should extend Abstract class
+driver should be passed from Test method to page mthods
+to catch the driver create constructor in each and every page class, give life to or intitiate page class driver this way
+Every page class should pass the driver to parent Abstract method through constructor using super(driver) 
+After log in when you click log in, it lands on product page
+So create the object of product page in Login() method and return it
+In Test class call the methods, and test it. In test class have assertion too
+
+We have a Base Class or Abstraction call, for Page objects. All common things are set up there in Abstraction class.
+All Page objects inherit from this Abstraction class.
+
+We should have a Base class for test  classes as well.
+
+If there are 100 Tests, Don't create 100 Java Classes.
+Create may be 20 Java classes and put all 100 Tests inside using @Test annotation
+@Test method is one test case
+For example, you can create one java class for all error validations, and put all error validations test cases inside it.
+
+To run multiple classes or Test Methods at once we need XML Runner file
+Just right click on your project -> TestNG -> Convert to TestNG -> It will create a XML Runner file
+Now in the XML Runner file - Create as many <Test> </Test> as you have no of Tests as It will come nicely in the Report
+Now add and delete Class files accordingly
+
+If you declare parallel="tests" in suite level, Tests meaning not Test method, but inside XML all the <Test> </Test> tag will be run 
+parallelly. thread-count=5, that means, inside that <Test> </Test>, max 5 browsers will open at a time for parallel execution
+Recommended is to   have thread-count<5
+If you declare parallel="methods", then each and every method or @Test method will run parallelly.
+
+grouping concept in testng.xml --->>> If you want to run all error validations test case methods then in testng.xml
+declare groups and also in test case as shown in eclispe
+but testNG expects @beforeMethod and @AfterMethod also to be groupd, or else it will not run them but never do that
+Instead declare like ---> @BeforeMethod(alwaysRun=true). For error validation create another xml, inside runner suite
+
+You can add multiple groups to a @Test case method by adding multiple group names comma separated
+
+Now we will build an Utility which can tread Json file,convert it to String, then from String to HashMaps
+My Test should not have any data, Test should look clean, external data should come from Jason.
+This is parameterization using Json file.
+
+Group ID and Artifact ID- Artifact ID is the project name. when you publish your project to maven. Anybody can download using
+Group ID and Artifact ID
+
+You can run the XML file from eclipse.
+
+You can run them using maven commands too.
+Install maven, and then integrate maven with TestNG in POM.xml. Do this by searching maven testng integration. Go here Using Suite XML Files
+Inside SureFirePlugin, you have to mention xml file's name which you want to execute
+However in Real time, there may be hundreds of XML files to run, so crete one one profile for one xml, like Regression Profile,
+Error Validation Profile
+And Path you give complete path including folderd subfolder
+like src/test/java/RahulShettyAcademy/Resources/testng.xml
+
+Suppose you have written the code in eclipse to run in chrome, but client immediately wants us to run in firefox, what will you do?
+You can send global variable browser=firefox from maven command too, It will supercede eclispe code, however there should me
+some mechanishm that your code is listening to maven command for that change in your basetest, which browser to run
+
+Download Jenkins, then it any folder, then in command prompt, give below command-
+java CD FolderwhereJenKinsIsThere 
+java -jar jenkins.war -httpPort=9090 or 8080(we are asking java to open the jar file) -> Enter
+Now go to browser localhost:9090 and you will see Jekins URL
+
+chrome is very famous for running tests in headless mode, chrome engine runs it in the backend
+no chrome browser invocation you will see, even in the task bar, but many tells not to run in headless mode to catch more bugs
+as headless mode does not mimic user action perfectly, as user opens the browser.
+
+In Jenkins, You can schedule jobs, like nightly execution etc.
+Jenkins -> Configure -> Build Triggers -> Add five stars with spaces -> * * * * * 
+2nd star is of hour, 1st star is of minute. Give H7*** so that It will run daily at 7 AM
+You can tell to run monthly, yearly, on specific date too. However you have to make the server on, for you santosh, make the Laptop ON.
+
+Cucumber -
+Gherkin Language (BDD)- we write test cases or scenarios in plain english. In plain english issue is
+BA/PO wrote it, Dev misinterprets it, then QA misinterprets it as it's plain english.
+So to standardise it a universal language like Gherkin is used.
+
+Gherkin Scenario format-
+Test Case is called scenario in cucumber
+Format:- 
+1st create a Feature file, by saving any file with .feature. It's called feature file. Then write below-
+Feature:Log in
+Scenario: Web Log in
+Given User is on Log in page on the web.
+When user enters user id and password.
+And click on submit button.
+Then Log in success message should be displayed.
+But Error message should not be displayed.
+
+you can have multiple pre-conditions, user actions or expected outcome
+And is used to concatenate positive statements
+But is used to concatanate negative statements
+
+Feature represents a Business Requirements. Feature consists of many scenarios. It acts a Test Suite.
+Scenario Outline: is when you parameterize cucumber scenario
+
+Now Go to Eclipse->
+Cucumber Java and Cucumber TestNG dependency add to POM.xml, 
+in this way you can write cucumber java using TestNG and cucumber wrapper over it
+Go to Eclipse Market Place -> Install Cucumber Plug-in
+
+To convert Feature file to StepDefination file, user Tidy Gherkin plug-in
+If in your company you have written project in TestNG, you can convert it to cucumber, not a big deal, backend code 'll be same.
+If your ccumber unner file inherits AbstractTestNGCucumberTests class, then it can read all TestNG annotation
+
+@CucumberOptions(features="src/test/java/cucumber",glue="RahulShettyAcademy.StepDefination",monochrome = true, 
+plugin= {"html:target/cucumber.html"}) ---> glue is asking where is ur step defination files,
+features is asking where are your features, monochrome=true means read in readable format
+plugin= is where report will be generated
+
+Git and GitHub Knowledge-
+Install Git.
+Log into GitHub.
+Git commands help user communicates with GitHub Repository.
+If you don't know Git commands, then there is Tortoise Git, Eclipse, IntelliJ where you just have click on Push, Pull button etc.
+However in the backend they call the same Git commands. Better to know Git commands.
+
+Create a new repository in GitHub.
+Create a folder and put your code which you want to push to gitHub.
+
+From Command promt tell who you are, and what is your Email id to GitHub using command prompt with below commands
+git config --global user.name "Sam Smith"
+git config --global user.email sam@example.com
+
+Now GitHub to read your local folder. Initialize the folder with GitHub using command git init, before this command
+go to the folder using command cmd folderpath in commandprompt.then git init, Now GitHub can read from this folder.
+
+Now GitHub will look for commited files, and commit looks for staging files
+So you need to push the files to staging area the files 1st, then you need to commit the files.
+
+If you have 100 Java class files, and push them to staging area, then 20 to commit, only 20 will be pushed to GitHub.
+Staging Area -> Committed Area -> GitHub.
+
+git remote add origin <server> -> we have to tell Git, to which repositiry we want to push, 
+we are adding a remote repository having origin , 
+to take the origin go to code dropdown, and take the HTTPS
+
+Then git push origin master -> Now It will ask for credentials for your Git repository 
+or else others can push their code into us repository.
+
+Imagine you have joined a new company named Infosys, and you want to bring the Project already written from GitHub.
+Then you have to Clone the project. Clone is the for the very first time, next time onwards use pull command not clone.
+git clone respository path taken from GitHub code dropdown.
+Now go to the folder where It is downloaded.
+Now Go to Eclipse -> Import -> General -> Existing Project into the Workspaces -> Eclipse will be ready with the new project
+You can start working on it.
+
+Imagine one indian and another american guy are working on the same project.
+Both have projects the same in their eclipse. 
+indian guy made some changes in offshore hours, then added them into eclipse as below
+after adding code and saving eclipse indian goes - git status -> It will show in red that you have made changes to these files
+then indian guy will do - git add * to add to the staging
+then the indian gut will do - git commit -m "commit from offshore on 24th march"
+git status -> Now it will show in green what are the changed files ready to be pushed.
+now indian guy does git push origin master.
+the offshore updated code is now available in GitHub.
+Now the american comes next day, he will do -> git pull origin master -> In this way americal guy will get the updated code in his Local.
+
+Branching Concept in Git->
+Imagine A and B are working on master branch. Their test cases are there in master branch.
+Business wants these test cases to run daily, as regression.
+Now Imagine Arch 1(American) and Arch 2(India) are two architects involved to optimise the framework, which will take 1 month.
+Now A and B code will not work as Arch 1 and Arch 2 have modified the master branch. 
+And Architects will take a month to optimise the entire framework.
+So to resolve this issue, Arch1 will cut the master branch into develop branch, and starts working on develop branch.
+Now at end of onshore time Arch1 will push to develop branch
+Now Arch2 will pull the develop branch and work on it at offshore time, then push it to develop branch.
+After a month Arch will merge the develop branch into maste branch so A and B can also use updated optimised framework by pulling 
+the code from master branch.
+Just like a Tree has many branches, GitHub master branch can have many branches for diff purpose.
+
+when user creates a new branch, whole code from master will be copied to the new branch.
+without commit, user can not pull, push or merge.
+
+suppose you are working on local, and you made many changes and commit. Now you are confused where all you
+made changes, so to get the master branch code before you started working you can fire below two commands
+which will reset, and nullify your commits, and get you the master code.	
+git fetch origin
+git reset --hard origin/master
+
+DevOps (CI/CD) Concept-> Continuous Integration, and Continuous Delivery.
+Developer pushes the code to GitHub -> WebHooksin GitHub tells Jenkins that somebody has pushed code into GitHUb
+->WebHooks trigger Jenkins->
+Now JenKins has many Jobs, like one job for putting code into Production, another job to run automation test cases.
+->once WebHooks inform Jenkins, Jenkins job pull the latest code from GitHub and run the job to run automation.
+
+cmd -> cd folderpath -> It will take you to inside the folder
+cmd -> mkdir cicd ->It will create a new directory or folder named cicd (You can do it in windows too)
+cmd -> pwd ->It will show present working directory
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
