@@ -1,10 +1,10 @@
 RahulShettyAcademy\Resources\ExtentReporterNG.class
 RahulShettyAcademy\TestComponents\Retry.class
-RahulShettyAcademy\Tests\SubmitOrder.class
-RahulShettyAcademy\Tests\StandAloneTest.class
 RahulShettyAcademy\TestComponents\Listeners.class
 RahulShettyAcademy\Tests\ErrorValidationTest.class
-RahulShettyAcademy\Data\DataReader$1.class
-RahulShettyAcademy\TestComponents\BaseTest$1.class
 RahulShettyAcademy\Data\DataReader.class
 RahulShettyAcademy\TestComponents\BaseTest.class
+RahulShettyAcademy\Tests\SubmitOrder.class
+RahulShettyAcademy\Tests\StandAloneTest.class
+RahulShettyAcademy\Data\DataReader$1.class
+RahulShettyAcademy\TestComponents\BaseTest$1.class
